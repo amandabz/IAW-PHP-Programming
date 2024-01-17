@@ -1,0 +1,1 @@
+Hola, tú nombre es <?= $_GET["name"];?>

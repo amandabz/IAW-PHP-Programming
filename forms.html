@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML</title>
+</head>
+<body>
+<!-- EJERCICIO 1 -->
+<section class="first_form">
+    <h3> Ejercicio 1</h3>
+    <form method="post" action="/">
+        <fieldset>
+            <legend>Datos de la incidencia</legend>
+
+            <label>Usuario:
+                <br>
+                <input id="name" type="text" name="name" required><br>
+                <br>
+            </label>
+            <div>
+                <datalist id="dpto">
+                    <option value="Informática"></option>
+                    <option value="Humanidades"></option>
+                </datalist>
+                <label>
+                    Departamento:
+                    <br>
+                    <input list="dpto" name="dpto">
+                </label>
+            </div>
+            <br>
+            <label>Descripción:
+                <br>
+                <textarea rows="3" cols="40">
+Describa la incidencia...
+                </textarea>
+                <br>
+            </label>
+
+            <label>Contraseña:
+                <br>
+                <input id="pass" type="password" name="pass" required><br>
+                <br>
+            </label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Botones de reset y envío:</legend>
+            <input type="reset" value="Resetear">
+            <input type="submit" value="Enviar">
+        </fieldset>
+    </form>
+</section>
+<br>
+
+<!-- EJERCICIO 2 -->
+<section class="second_form">
+    <h3> Ejercicio 2</h3>
+    <form method="post">
+        <fieldset>
+            <legend>Datos fiscales</legend>
+            <label>
+                <input type="radio" name="data[]">
+                En paro
+                <br/>
+                <input type="radio" name="data[]">
+                Autónomo
+                <br/>
+                <input type="radio" name="data[]">
+                Por c.ajena
+            </label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Datos personales</legend>
+
+            <label> Nombre:
+                <input type="text">
+            </label>
+            <br>
+            <label> Apellidos:
+                <input type="text">
+            </label>
+            <br>
+            <label>
+                Sueldo:
+                <br>
+                <input list="salary" name="salary">
+            </label>
+            <datalist id="salary">
+                <option value="Más de 400 euros"></option>
+                <option value="Menos de 400 Euros"></option>
+                <option value="Variables"></option>
+            </datalist>
+            <br>
+            <label>
+                <input type="checkbox" name="personal_data[]">
+                Con enfermedad profesional
+                <br/>
+                <input type="checkbox" name="personal_data[]">
+                Con padres a cargo
+                <br/>
+                <input type="checkbox" name="personal_data[]">
+                Con hijos a cargo
+            </label>
+        </fieldset>
+    </form>
+</section>
+<br>
+
+<!-- EJERCICIO 3 -->
+<section class="third_form">
+    <h3> Ejercicio 3</h3>
+    <form method="post">
+        <fieldset>
+            <legend>Datos fiscales</legend>
+            <label>
+            <select name="select_ej3" multiple>
+                <option value="AM">Automoción</option>
+                <option value="metal">Metal</option>
+                <option value="IM">Informática</option>
+                <option value="FN">Finanzas</option>
+            </select>
+            <br>
+            </label>
+            <label>
+                <input type="checkbox" name="data[]">
+                Cuenta ajena
+                <input type="checkbox" name="data[]">
+                Autónomo
+                <input type="checkbox" name="data[]">
+                No sabe
+            </label>
+            <br>
+            <label>Describa su función:
+                <br>
+                <textarea rows="3" cols="40">
+Escriba aquí
+                </textarea>
+            </label>
+        </fieldset>
+    </form>
+</section>
+<br>
+
+<!-- EJERCICIO 4 -->
+<section class="4_form">
+    <h3> Ejercicio 4</h3>
+    <form method="post">
+        <fieldset>
+            <legend>Laboral</legend>
+            <label>
+                <input type="checkbox" name="data[]">
+                Cuenta ajena
+                <input type="checkbox" name="data[]">
+                Autónomo
+            </label>
+            <br>
+            <label> ¿Alguna vez en el extranjero?
+                <br>
+                <input type="radio" name="extranjero[]">
+                Sí
+                <select>
+                    <option value="EU">Dentro de la EU</option>
+                    <option value="NO-EU">Fuera de la EU</option>
+                </select>
+                <br>
+                <input type="radio" name="extranjero[]">
+                No
+                <br/>
+            </label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Personal</legend>
+            <label> Apellidos y nombre:
+                <input type="text">
+            </label>
+            <br>
+            <label> Conocimiento sobre:
+                <br>
+                <select name="select_ej4" multiple>
+                    <option value="AM">Automoción</option>
+                    <option value="metal">Metal</option>
+                    <option value="IM">Informática</option>
+                    <option value="FN">Finanzas</option>
+                </select>
+            </label>
+        </fieldset>
+    </form>
+</section>
+<br>
+<section>
+    <form method="post">
+        <label>Nombre:
+            <input type="text" required>
+        </label>
+        <br>
+        <label>Contraseña:
+            <input type="password" required>
+        </label>
+        <br>
+        <label>Correo electrónico:
+            <input type="email" required>
+        </label>
+        <br>
+        <label>URL:
+            <input type="email" placeholder="Escribe la URL de tu página" required>
+        </label>
+    </form>
+</section>
+</body>
+</html>
