@@ -16,7 +16,7 @@ if (isset($_GET["num1"]) && isset($_GET["num2"]) && isset($_GET["opers"])) {
             echo "El resultado de la multiplicación es: " . $mult_result;
         } elseif ($oper == "div") {
             if ($num1 == 0 or $num2 == 0) {
-                echo "No es posible dividir entre 0";
+                echo "No es posible dividir entre 0.";
             } else {
                 $div_result = $num1 / $num2;
                 echo "El resultado de la división es: " . $div_result;
