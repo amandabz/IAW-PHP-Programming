@@ -1,5 +1,5 @@
 <?php
-if (isset($_GET["num1"]) && isset($_GET["num2"])) {
+if (isset($_GET["num1"]) && isset($_GET["num2"]) && isset($_GET["opers"])) {
     $num1 = $_GET["num1"];
     $num2 = $_GET["num2"];
     $oper = $_GET["opers"];
@@ -15,11 +15,15 @@ if (isset($_GET["num1"]) && isset($_GET["num2"])) {
             $mult_result = $num1 * $num2;
             echo "El resultado de la multiplicación es: " . $mult_result;
         } elseif ($oper == "div") {
-            $div_result = $num1 / $num2;
-            echo "El resultado de la división es: " . $div_result;
+            if ($num1 == 0 or $num2 == 0) {
+                echo "No es posible dividir entre 0";
+            } else {
+                $div_result = $num1 / $num2;
+                echo "El resultado de la división es: " . $div_result;
+            }
         }
     } else {
-        echo "Por favor, introduce los dos números.";
+        echo "Por favor, introduce los valores pedidos.";
     }
 } else {
     echo "No has escrito nada.";
