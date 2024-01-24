@@ -1,5 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horario de clase</title>
+    <style>
+        th, td {
+            border: 1px solid;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
 <?php
-// Ej 9 Relación 1
 $horario = array(
     array("Hora", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes"),
     array("8:15 - 9:15", "SRI", "ASO", "HLC", "ASO", "ASGBD"),
@@ -9,4 +23,23 @@ $horario = array(
     array("12:45 - 13:45", "EINEM", "SRI", "IAW", "IAW", "SRI"),
     array("12:45 - 14:45", "EINEM", "SRI", "IAW", "IAW", "SRI")
 );
+?>
+
+<table>
+    <?php
+    foreach ($horario as $row): ?>
+        <tr>
+            <?php foreach ($row as $cell): ?>
+                <?php if ($cell == "Hora"): ?>
+                    <th><?php echo $cell; ?></th>
+                <?php else: ?>
+                    <td><?php echo $cell; ?></td>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </tr>
+    <?php endforeach; ?>
+</table>
+
+</body>
+</html>
 
