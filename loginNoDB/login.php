@@ -20,7 +20,6 @@ if(isset($_POST["usuario"]) && isset($_POST["password"])){
         // validate user
         $_SESSION["username"] = $username;
         header("Location: contenido.php");
-
     } else {
         // unvalidate user
         header("Location: index.php");
