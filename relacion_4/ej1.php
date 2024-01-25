@@ -3,28 +3,28 @@
 // funciones. Recuerda que puedes usar unas dentro de otras si es necesario.
 // a. esCapicua: Devuelve verdadero si el número que se pasa como parámetro es capicúa y falso en caso contrario.
 // b. esPrimo: Devuelve verdadero si el número que se pasa como parámetro es primo y falso en caso contrario.
+function esCapicua($numero_capicua) {
+    $cadena_normal = (string)$numero_capicua;
+    $cadena_invertida = strrev($cadena_normal);
 
-$n = readline("Escribe un numero para comprobar si es primo o no: ");
+    return $cadena_normal === $cadena_invertida;
+}
 
-function esPrimo($numero) {
-    $esPrimo = true;
 
-    for ($i = 2; $i < $numero; $i++) {
-        if ($numero % $i == 0) {
-            $esPrimo = false;
-            break;
+function esPrimo($numero_primo) {
+    if ($numero_primo < 2) {
+        return false;
+    }
+
+    for ($i = 2; $i * $i < $numero_primo; $i++) {
+        if ($numero_primo % $i == 0) {
+            return false;
         }
     }
-    if ($numero == 0 || $numero == 1) {
-        $esPrimo = false;
-    }
-
-    return $esPrimo;
+    return true;
 }
 
-if (esPrimo($n)) {
-    echo "El $n es primo.\n";
-} else {
-    echo "El $n no es primo.\n";
-}
+
+
+
 
