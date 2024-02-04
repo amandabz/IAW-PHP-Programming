@@ -39,10 +39,10 @@ if(isset($_POST["usuario"]) && isset($_POST["password"])){
         $statement->execute();
 
         // get result
-        $resultado=$statement->get_result();
+        $result=$statement->get_result();
 
-        // see if the user exists
-        if ($resultado->num_rows > 0) {
+        // check if the user exists
+        if ($result->num_rows > 0) {
             header("Location=contenido.php");
         } else{
             header("Location=login.php");
