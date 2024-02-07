@@ -53,8 +53,15 @@
 
       // Modificar un cliente
       if (isset($_GET['accion']) && $_GET['accion'] == 'modificar') {
-       //hacer llamada a BD con la consulta oportuna
-      }
+        $update_with_dni = $_GET['dni'];
+        $update_dni = $_GET['dni'];
+        $update_name = $_GET['nombre'];
+        $update_address = $_GET['direccion'];
+        $update_number = $_GET['telefono'];
+
+        $query = "UPDATE cliente SET nombre = '$update_name', direccion = '$update_address', telefono = '$update_number' WHERE dni = '$update_with_dni'";
+        mysqli_query($conn, $query);
+    }
 
       // Listado
       //Este listado se muestra siempre
