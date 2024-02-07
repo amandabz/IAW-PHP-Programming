@@ -1,4 +1,4 @@
-<?
+<?php
 
 echo "<h1>Pantalla inicio</h1>";
 

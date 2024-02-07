@@ -1,5 +1,4 @@
-<?
-
+<?php
 if (
     isset($_POST['usuario']) && isset($_POST['password'])
     && isset($_POST['password2'])
@@ -53,8 +52,8 @@ if (
         header("Location: login.php");
     }
 }
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 

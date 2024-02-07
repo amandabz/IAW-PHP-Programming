@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 //si ya existe un usuario en la sesión vamos al contenido del usuario
 if (isset($_SESSION['usuario'])) {
@@ -37,8 +37,8 @@ if (isset($_SESSION['usuario'])) {
         $conn->close();
     }
 }
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
