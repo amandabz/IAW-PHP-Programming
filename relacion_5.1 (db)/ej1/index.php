@@ -16,28 +16,39 @@
       <h1 >GESTCLIENT</h1>
       <h2>Gestión de clientes de CertiBank</h2>
       <?php
-      // conexión a la base de datos
+      // Conexión a la base de datos
       $host = "db";
       $dbUsername = "root";
       $dbPassword = "test";
-      $dbName = "usuarios";
+      $dbName = "Banco";
 
       $conn = mysqli_connect($host, $dbUsername, $dbPassword, $dbName);
-      // verificar la conexión
-      if ($conn->connect_error) {
-          die("Error de conexión: " . $conn->connect_error);
-      }
 
       //obtener la acción del botón que se ha pulsado en el formulario
       
       // Dar de baja un cliente
       if (isset($_GET['accion']) && $_GET['accion'] == 'borrar') {
-      //hacer llamada a BD con la consulta oportuna
+        $delete_with_dni = $_GET['dni']; 
+
+        $query = "DELETE FROM cliente WHERE dni = '$delete_with_dni'";
+        mysqli_query($conn, $query);
       }
 
       // Dar de alta un cliente
       if (isset($_GET['accion']) && $_GET['accion'] == 'crear') {
-      //hacer llamada a BD con la consulta oportuna
+        $dni = $_GET['dni'];
+        $nombre = $_GET['nombre'];
+        $direccion = $_GET['direccion'];
+        $telefono = $_GET['telefono']; 
+
+        $query = "INSERT INTO cliente (dni, nombre, direccion, telefono) VALUES (?, ?, ?, ?)";
+
+        $insert_client = $conn->stmt_init();
+        $insert_client->prepare($query);
+        $insert_client->bind_param('issi', $dni, $nombre, $direccion, $telefono);
+        // ejecucion
+        $insert_client->execute();
+        $insert_client->close();
       }
 
       // Modificar un cliente
@@ -62,18 +73,10 @@
 
         <form action="index.php" method="GET">
           <tr>
-            <td><label>
-                    <input type="text" name="dni">
-                </label></td>
-            <td><label>
-                    <input type="text" name="nombre">
-                </label></td>
-            <td><label>
-                    <input type="text" name="direccion">
-                </label></td>
-            <td><label>
-                    <input type="text" name="telefono">
-                </label></td>
+            <td><input type="text" name="dni"></td>
+            <td><input type="text" name="nombre"></td>
+            <td><input type="text" name="direccion"></td>
+            <td><input type="text" name="telefono"></td>
             <input type="hidden" name="accion" value="crear">
             <td><input type="submit" value="Añadir"></td>
           </tr>
@@ -81,8 +84,14 @@
 
         <?php
         //mostrar los clientes de la bd en la tabla
-        
-        while ($registro = array()) { //hay que modificar el array() y cambiarlo por el código adecuado
+        $query = 'SELECT * from cliente';
+        $statement = $conn->stmt_init();
+        $statement->prepare($query);
+        $statement->execute();
+
+        $result = $statement->get_result();
+
+        while ($registro = $result->fetch_assoc()) {
         echo "<tr>
             <td>".$registro['dni']." </td>
             <td>". $registro['nombre']." </td>
@@ -101,10 +110,15 @@
               </a>
             </td>
           </tr>";
+        
         }
         ?>
       </table>
     </div>
   </div>
+
+
+
 </body>
+
 </html>
