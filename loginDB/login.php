@@ -1,66 +1,40 @@
 <?php
 session_start();
-//aquí se comprueba si el usuario ha insertado un username y password
-//utiliza la función hash('sha512',$password) para cifrar la contraseña
-//si el username es test y la password cifrada coincide con el hash('sha512',"test")
-//se trata de un usuario válido y debemos proceder a guardar el username en la sesión 
-//y posteriormente usar la función header("Location: contenido.php"); para acceder
-//a la parte privada de la aplicación
-//Si el username y contraseña no coincide con test/test usaremos la función header
-//header("Location: index.php"); para ir a la parte pública de la aplicación
+//si ya existe un usuario en la sesión vamos al contenido del usuario
+if (isset($_SESSION['usuario'])) {
+    header('Location: contenido.php');
+} else {
 
-if(isset($_POST["usuario"]) && isset($_POST["password"])){
-    $username = strtolower($_POST["usuario"]);
-    $password = $_POST["password"];
+    if (isset($_POST['usuario']) && isset($_POST['password'])) {
 
-    $password = hash('sha512', $password);
+        $user = strtolower($_POST['usuario']);
+        $password = hash('sha512', $_POST['password']);
 
-    try {
-        //database connection parameters
-        $host="db";
-        $dbUsername="root";
-        $dbPassword="test";
-        $dbName="Usuarios";
-
-        // connection
-        $conn=mysqli_connect($host,$dbUsername,$dbPassword,$dbName);
+        $host = "db";
+        $dbUsername = "root";
+        $dbPassword = "test";
+        $db = "Usuarios";
+        $conn =  mysqli_connect($host, $dbUsername, $dbPassword, $db);
+        // Verificar la conexión
         if ($conn->connect_error) {
-            die;
+            die("Error de conexión: " . $conn->connect_error);
         }
 
-        // init statement
-        $statement=$conn->stmt_init();
-
-        // prepare statement
-        $statement->prepare('Select * From usuarios Where usuario = ":NombreUsuario" and password = ":password"');
-        $statement->bind_param(':NombreUsuario, :password',$username,$password );
-
-        // execute statement
+        $statement = $conn->stmt_init();
+        $statement = $conn->prepare('SELECT * FROM usuarios WHERE usuario = ? AND password = ? LIMIT 1');
+        $statement->bind_param('ss', $user, $password);
         $statement->execute();
+        $statement->store_result();
 
-        // get result
-        $result=$statement->get_result();
-
-        // check if the user exists
-        if ($result->num_rows > 0) {
-            header("Location=contenido.php");
-        } else{
-            header("Location=login.php");
+        if ($statement->num_rows == 1) {
+            $_SESSION['usuario'] = $user;
+            header("Location: contenido.php");
+        } else {
+            header("Location: registro.php");
+            //echo "usuario no existe";
         }
-
-        // close statement and connection
         $statement->close();
         $conn->close();
-
-    } catch (Throwable $th) {
-        //throw $th;
-    }
-
-    if ($username == 'test' && $password == $password_test) {
-        $_SESSION["username"] = $username;
-        header("Location: contenido.php");
-    } else {
-        header("Location: index.php");
     }
 }
 ?>
@@ -71,19 +45,17 @@ if(isset($_POST["usuario"]) && isset($_POST["password"])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
+
 </head>
 <body>
-<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="POST" name="login">
-    <label>
-        <input type="text" name="usuario" placeholder="Usuario">
-    </label>
-    <label>
-        <input type="password" name="password" placeholder="Password">
-    </label>
-    <input type="submit" value="Aceptar">
-</form>
+    <form action="<? echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="POST" name="login">
 
-<p>¿No tienes cuenta?</p>
-<a href="registro.php">Registrate</a>
+    <input type="text" name="usuario" placeholder="Usuario">
+    <input type="password" name="password" placeholder="Password">
+    <input type="submit" value="Aceptar">
+    </form>
+
+    <p>¿No tienes cuenta?</p>
+    <a href="registro.php">Registrate</a>
 </body>
 </html>

@@ -1,84 +1,85 @@
 <?php
-if (isset($_POST['username']) && isset($_POST['password1']) && isset($_POST['password2'])) {
-    $username=$_POST["username"];
-    $password1=hash('sha512',$_POST['password1']);
-    $password2=hash('sha512',$_POST['password2']);
+if (
+    isset($_POST['usuario']) && isset($_POST['password'])
+    && isset($_POST['password2'])
+) {
+    $user = strtolower($_POST['usuario']);
+    $password = hash('sha512', $_POST['password']);
+    $password2 = hash('sha512', $_POST['password2']);
 
-    if ($password1 == $password2) {
+    if ($password == $password2) { //si las pass coinciden
+        //comprobamos que el usuario no existe ya en BD
         try {
-            //database connection parameters
-            $host="db";
-            $dbUsername="root";
-            $dbPassword="test";
-            $dbName="Usuarios";
-
-            // connection
-            $conn=mysqli_connect($host,$dbUsername,$dbPassword,$dbName);
+            $host = "db";
+            $dbUsername = "root";
+            $dbPassword = "test";
+            $dbName = "Usuarios";
+            //Crear una conexión a la base de datos
+            $conn = mysqli_connect($host, $dbUsername, $dbPassword, $dbName);
+            //Verificar la conexión
             if ($conn->connect_error) {
-                die ;
+                die("Error de conexión: " . $conn->connect_error);
             }
 
-            // init statement
-            $statement=$conn->stmt_init();
+            //Iniciar el statement
+            $statement = $conn->stmt_init();
+            //Preparar el statement
+            $statement->prepare('SELECT * FROM usuarios WHERE usuario = ? LIMIT 1');
+            //Añadir los parámetros
+            $statement->bind_param('s', $user);
+            //Ejecutar el statement
+            $statement->execute();
+            //Obtener los resultados
+            $resultado = $statement->get_result();
 
-            // prepare statement
-            $statement->prepare('Select * From usuarios Where usuario = ?');
-            $statement->bind_param('s',$username);
-
-            // get result
-            $resultado=$statement->get_result();
-
-            // check if the user exists
+            //Comprobar si la consulta devuelve filas
             if ($resultado->num_rows > 0) {
-                echo "error";
+                // $errores .= "el usuario ya existe";
             } else {
-                // if it does not exist, I save it in the database
-                $insertstatement=$conn->stmt_init();
-                echo "Insert Into usuarios(usuario,password) values ($username,$password1)";
-                $insertstatement->prepare("Insert Into usuarios(usuario,password) values (?,?)");
-                $insertstatement->bind_param('ss', $username, $password1);
-
-                // execute statement
-                $insertstatement->execute();
-
-                // close statement
-                $insertstatement->close();
+                //guardo en BD el usuario
+                $insertStatement = $conn->prepare('INSERT INTO usuarios(usuario, password) values (?, ?)');
+                $insertStatement->bind_param('ss', $user, $password);
+                $insertStatement->execute();
+                //Cerrar statement
+                $insertStatement->close();
             }
-
-            // close statement and connection
+            //Cerrar statement y conexion
             $statement->close();
             $conn->close();
+        } catch (Exception $e) {
 
-        } catch (Throwable $th) {
-            //throw $th;
         }
+        header("Location: login.php");
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro</title>
+    <title>Iniciar Sesión</title>
 
 </head>
+
 <body>
+    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" name="login">
+        <label>
+            <input type="text" name="usuario" placeholder="Usuario">
+        </label>
+        <label>
+            <input type="password" name="password" placeholder="Password">
+        </label>
+        <label>
+            <input type="password" name="password2" placeholder="Repite Password">
+        </label>
+        <input type="submit" value="Aceptar">
+    </form>
 
-<p>En construccion...</p>
-
-<form action="registro.php" method="post">
-    <label>
-        <input type="text" name="username" placeholder="Usuario">
-    </label><br>
-    <label>
-        <input type="text" name="password1" placeholder="Contraseña">
-    </label><br>
-    <label>
-        <input type="text" name="password2" placeholder="Repite la contraseña">
-    </label><br>
-    <input type="submit" value="send">
-</form>
-<a href="login.php">Inicia sesión</a>
+    <p>¿Tienes cuenta?</p>
+    <a href="login.php">Inicia sesión</a>
 </body>
+
 </html>
