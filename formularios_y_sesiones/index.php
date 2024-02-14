@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Función para validar el nombre
 function validarNombre($nombre) {
   return preg_match('/^[a-zA-Záéíóúñ]+$/', $nombre);
@@ -22,29 +23,32 @@ $errores = [];
 
 // Se procesan los datos si se ha enviado el formulario
 if (isset($_POST['submit'])) {
-      // Se obtienen los datos del formulario
-      $nombre = $_POST['nombre'];
-      $telefono = $_POST['telefono'];
-      $email = $_POST['email'];
+  // Se obtienen los datos del formulario
+  $nombre = $_POST['nombre'];
+  $telefono = $_POST['telefono'];
+  $email = $_POST['email'];
 
-      // Se validan los datos
-      if (!validarNombre($nombre)) {
-        $errores[] = "El nombre solo puede contener letras.";
-      }
-      if (!validarTelefono($telefono)) {
-        $errores[] = "El número de teléfono debe tener 9 números y comenzar por 6 o 7.";
-      }
-      if (!validarEmail($email)) {
-        $errores[] = "La dirección de correo electrónico no es válida.";
+  // Se validan los datos
+  if (!validarNombre($nombre)) {
+    $errores[] = "El nombre solo puede contener letras.";
+  }
+  if (!validarTelefono($telefono)) {
+    $errores[] = "El número de teléfono debe tener 9 números y comenzar por 6 o 7.";
+  }
+  if (!validarEmail($email)) {
+    $errores[] = "La dirección de correo electrónico no es válida.";
   }
 
   // Si no hay errores, se muestran los datos
   if (!$errores) {
+    $_SESSION['nombre']=$nombre;
+    $_SESSION['telefono']=$telefono;
+    $_SESSION['email']=$email;
     echo "<h2>Datos válidos</h2>";
     echo "<ul>";
-    echo "<li>Nombre: $nombre</li>";
-    echo "<li>Teléfono: $telefono</li>";
-    echo "<li>Correo electrónico: $email</li>";
+    echo "<li>Nombre:".$_SESSION['nombre']."</li>";
+    echo "<li>Teléfono:".$_SESSION['telefono']."</li>";
+    echo "<li>Correo electrónico:".$_SESSION['email']."</li>";
     echo "</ul>";
   } else {
     // Se muestran los errores
