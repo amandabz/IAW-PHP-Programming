@@ -38,15 +38,9 @@
 
       function eliminarCliente($conn, $dni) {
           if (clienteExiste($conn, $dni)) {
-              $query = "DELETE FROM cliente WHERE dni = ?";
-              $stmt = $conn->prepare($query);
-              $stmt->bind_param('s', $dni);
-              $stmt->execute();
-              if ($stmt->affected_rows > 0) {
-                  return true;
-              } else {
-                  return false;
-              }
+              $query = "DELETE FROM cliente WHERE dni = '$dni'";
+              mysqli_query($conn, $query);
+              return true;
           } else {
               return false;
           }
@@ -56,14 +50,24 @@
           if (clienteExiste($conn, $dni)) {
               return "<p>Ese DNI ya existe. Prueba con otro.</p>";
           } else {
-              $query = "INSERT INTO cliente (dni, nombre, direccion, telefono) VALUES (?, ?, ?, ?)";
-              $insert_client = $conn->prepare($query);
-              $insert_client->bind_param('ssss', $dni, $nombre, $direccion, $telefono);
-              $insert_client->execute();
-              $insert_client->close();
+              $query = "INSERT INTO cliente (dni, nombre, direccion, telefono) VALUES ('$dni', '$nombre', '$direccion', '$telefono')";
+              mysqli_query($conn, $query);
               return "";
           }
       }
+
+      // function crearCliente($conn, $dni, $nombre, $direccion, $telefono) {
+      //    if (clienteExiste($conn, $dni)) {
+      //        return "<p>Ese DNI ya existe. Prueba con otro.</p>";
+      //   } else {
+      //        $query = "INSERT INTO cliente (dni, nombre, direccion, telefono) VALUES (?, ?, ?, ?)";
+      //        $insert_client = $conn->prepare($query);
+      //        $insert_client->bind_param('ssss', $dni, $nombre, $direccion, $telefono);
+      //        $insert_client->execute();
+      //        $insert_client->close();
+      //        return "";
+      //    }
+     // }
 
       function modificarCliente($conn, $old_dni, $new_dni, $nombre, $direccion, $telefono) {
           if (clienteExiste($conn, $old_dni)) {
