@@ -25,16 +25,14 @@
 
       // funciones
       function clienteExiste($conn, $dni) {
-          $query = "SELECT COUNT(*) AS count FROM cliente WHERE dni = ?";
-          $stmt = $conn->prepare($query);
-          $stmt->bind_param('s', $dni);
-          $stmt->execute();
-          $result = $stmt->get_result();
-          $row = $result->fetch_assoc();
+          $query = "SELECT COUNT(*) AS count FROM cliente WHERE dni = '$dni'";
+          $result = mysqli_query($conn, $query);
+          $row = mysqli_fetch_assoc($result);
           $count = $row['count'];
 
           return $count > 0;
       }
+
 
       function eliminarCliente($conn, $dni) {
           if (clienteExiste($conn, $dni)) {
