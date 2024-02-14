@@ -67,17 +67,16 @@
 
       function modificarCliente($conn, $old_dni, $new_dni, $nombre, $direccion, $telefono) {
           if (clienteExiste($conn, $old_dni)) {
-              $update_query = "UPDATE cliente SET dni = ?, nombre = ?, direccion = ?, telefono = ? WHERE dni = ?";
-              $stmt = $conn->prepare($update_query);
-              $stmt->bind_param('sssss', $new_dni, $nombre, $direccion, $telefono, $old_dni);
-              $stmt->execute();
-              $stmt->close();
-              return true;
+              $update_query = "UPDATE cliente SET dni = '$new_dni', nombre = '$nombre', direccion = '$direccion', telefono = '$telefono' WHERE dni = '$old_dni'";
+              if (mysqli_query($conn, $update_query)) {
+                  return true;
+              } else {
+                  return false;
+              }
           } else {
               return false;
           }
       }
-
 
       // Dar de baja un cliente
       if (isset($_GET['accion']) && $_GET['accion'] == 'borrar') {
@@ -107,11 +106,7 @@
           $update_address = $_GET['direccion'];
           $update_number = $_GET['telefono'];
 
-          if (modificarCliente($conn, $old_dni, $new_dni, $update_name, $update_address, $update_number)) {
-              echo "<p>Cliente modificado.</p>";
-          } else {
-              echo "<p>No se puede modificar.</p>";
-          }
+          modificarCliente($conn, $old_dni, $new_dni, $update_name, $update_address, $update_number);
       }
 
       // Listado
