@@ -8,9 +8,7 @@
   <title>Gestclient</title>
   
 </head>
-
 <body>
-
   <div style="background-color: lightblue;">
     <div >
       <h1 >GESTCLIENT</h1>
