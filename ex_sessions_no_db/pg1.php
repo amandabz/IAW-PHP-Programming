@@ -36,7 +36,7 @@ print "</p>";
     <title>Examen Juego de Cartas (Sesiones)</title>
 </head>
 <body>
-<form method="post">
+<form method="post" action="pg2.php">
     <label for="carta_jugador_1">Jugador 1:</label>
     <?php echo $carta_jugador_1; ?>
     <br>

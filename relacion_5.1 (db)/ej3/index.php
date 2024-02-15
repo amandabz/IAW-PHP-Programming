@@ -22,60 +22,65 @@
 
       $conn = mysqli_connect($host, $dbUsername, $dbPassword, $dbName);
 
-
       // funciones
       function clienteExiste($conn, $dni) {
-          $query = "SELECT COUNT(*) AS count FROM cliente WHERE dni = '$dni'";
-          $result = mysqli_query($conn, $query);
-          $row = mysqli_fetch_assoc($result);
-          $count = $row['count'];
+          $query = "SELECT * FROM cliente WHERE dni=?";
+          $stmt = $conn->prepare($query);
+          $stmt->bind_param("s", $dni);
+          $stmt->execute();
+          $numRows = $stmt->get_result()->num_rows;
+          $stmt->close();
 
-          return $count > 0;
+          return $numRows > 0;
       }
-
 
       function eliminarCliente($conn, $dni) {
           if (clienteExiste($conn, $dni)) {
-              $query = "DELETE FROM cliente WHERE dni = '$dni'";
-              mysqli_query($conn, $query);
-              return true;
-          } else {
-              return false;
+              $query = "DELETE FROM cliente WHERE dni = ?";
+              $stmt = $conn->prepare($query);
+              $stmt->bind_param("s", $dni);
+              $stmt->execute();
+
+              if ($stmt->affected_rows > 0) {
+                  return true;
+              }
+              $stmt->close();
           }
+          return false;
       }
 
       function crearCliente($conn, $dni, $nombre, $direccion, $telefono) {
-          if (clienteExiste($conn, $dni)) {
-              return "<p>Ese DNI ya existe. Prueba con otro.</p>";
-          } else {
-              $query = "INSERT INTO cliente (dni, nombre, direccion, telefono) VALUES ('$dni', '$nombre', '$direccion', '$telefono')";
-              mysqli_query($conn, $query);
-              return "";
-          }
-      }
-
-      // function crearCliente($conn, $dni, $nombre, $direccion, $telefono) {
-      //    if (clienteExiste($conn, $dni)) {
-      //        return "<p>Ese DNI ya existe. Prueba con otro.</p>";
-      //   } else {
-      //        $query = "INSERT INTO cliente (dni, nombre, direccion, telefono) VALUES (?, ?, ?, ?)";
-      //        $insert_client = $conn->prepare($query);
-      //        $insert_client->bind_param('ssss', $dni, $nombre, $direccion, $telefono);
-      //        $insert_client->execute();
-      //        $insert_client->close();
-      //        return "";
-      //    }
-     // }
-
-      function modificarCliente($conn, $old_dni, $new_dni, $nombre, $direccion, $telefono) {
-          if (clienteExiste($conn, $old_dni)) {
-              $update_query = "UPDATE cliente SET dni = '$new_dni', nombre = '$nombre', direccion = '$direccion', telefono = '$telefono' WHERE dni = '$old_dni'";
-              if (mysqli_query($conn, $update_query)) {
-                  return true;
+          if (isset($dni) && isset($nombre) && isset($direccion) && isset($telefono)) {
+              if (clienteExiste($conn, $dni)) {
+                  echo "<p>Ese DNI ya existe. Prueba con otro.</p>";
               } else {
-                  return false;
+                  $query = "INSERT INTO cliente (dni, nombre, direccion, telefono) VALUES (?, ?, ?, ?)";
+                  $stmt = $conn->prepare($query);
+                  $stmt->bind_param("ssss", $dni, $nombre, $direccion, $telefono);
+                  $stmt->execute();
+
+                  if ($stmt->affected_rows > 0) {
+                      echo "El usuario con DNI ". $dni. " se ha insertado correctamente";
+                  }
+                  $stmt->close();
               }
-          } else {
+            }
+        }
+
+      function modificarCliente($conn, $old_dni, $new_dni, $nombre, $direccion, $telefono)
+      {
+          if (isset($new_dni) && isset($nombre) && isset($direccion) && isset($telefono)) {
+              if (clienteExiste($conn, $old_dni)) {
+                  $update_query = "UPDATE cliente SET dni = ?, nombre = ?, direccion = ?, telefono = ? WHERE dni = ?";
+                  $stmt = $conn->prepare($update_query);
+                  $stmt->bind_param("sssss", $new_dni, $nombre, $direccion, $telefono, $old_dni);
+                  $stmt->execute();
+
+                  if ($stmt->affected_rows > 0) {
+                      return true;
+                  }
+                  $stmt->close();
+              }
               return false;
           }
       }
@@ -97,7 +102,7 @@
           $direccion = $_GET['direccion'];
           $telefono = $_GET['telefono'];
 
-          echo crearCliente($conn, $dni, $nombre, $direccion, $telefono);
+          crearCliente($conn, $dni, $nombre, $direccion, $telefono);
       }
 
       // Modificar un cliente
@@ -128,10 +133,18 @@
 
         <form action="index.php" method="GET">
           <tr>
-            <td><input type="text" name="dni"></td>
-            <td><input type="text" name="nombre"></td>
-            <td><input type="text" name="direccion"></td>
-            <td><input type="text" name="telefono"></td>
+            <td><label>
+                    <input type="text" name="dni">
+                </label></td>
+            <td><label>
+                    <input type="text" name="nombre">
+                </label></td>
+            <td><label>
+                    <input type="text" name="direccion">
+                </label></td>
+            <td><label>
+                    <input type="text" name="telefono">
+                </label></td>
             <input type="hidden" name="accion" value="crear">
             <td><input type="submit" value="Añadir"></td>
           </tr>
