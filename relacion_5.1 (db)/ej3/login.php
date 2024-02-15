@@ -4,17 +4,18 @@ session_start();
 if (isset($_SESSION['usuario'])) {
     header('Location: contenido.php');
 } else {
-
     if (isset($_POST['usuario']) && isset($_POST['password'])) {
         $user = strtolower($_POST['usuario']);
         $password = $_POST['password'];
 
+        // conexión con base de datos
         $host = "db";
         $dbUsername = "root";
         $dbPassword = "test";
         $db = "Banco";
         $conn =  mysqli_connect($host, $dbUsername, $dbPassword, $db);
-        // Verificar la conexión
+
+        // verificar la conexión
         if ($conn->connect_error) {
             die("Error de conexión: " . $conn->connect_error);
         }
@@ -29,7 +30,7 @@ if (isset($_SESSION['usuario'])) {
             $_SESSION['usuario'] = $user;
             header("Location: index.php");
         } else {
-            header("Location: login.php");
+            echo "Este usuario no existe.";
             //echo "usuario no existe";
         }
         $statement->close();

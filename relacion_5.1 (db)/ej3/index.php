@@ -52,7 +52,7 @@
       function crearCliente($conn, $dni, $nombre, $direccion, $telefono) {
           if (isset($dni) && isset($nombre) && isset($direccion) && isset($telefono)) {
               if (clienteExiste($conn, $dni)) {
-                  echo "<p>Ese DNI ya existe. Prueba con otro.</p>";
+                  echo "<p>Ya existe un usuario con el DNI " . $dni . ". Prueba con otro.</p>";
               } else {
                   $query = "INSERT INTO cliente (dni, nombre, direccion, telefono) VALUES (?, ?, ?, ?)";
                   $stmt = $conn->prepare($query);
@@ -60,29 +60,28 @@
                   $stmt->execute();
 
                   if ($stmt->affected_rows > 0) {
-                      echo "El usuario con DNI ". $dni. " se ha insertado correctamente";
+                      echo "El usuario con DNI ". $dni . " se ha insertado correctamente";
                   }
                   $stmt->close();
               }
             }
         }
 
-      function modificarCliente($conn, $old_dni, $new_dni, $nombre, $direccion, $telefono)
-      {
-          if (isset($new_dni) && isset($nombre) && isset($direccion) && isset($telefono)) {
-              if (clienteExiste($conn, $old_dni)) {
-                  $update_query = "UPDATE cliente SET dni = ?, nombre = ?, direccion = ?, telefono = ? WHERE dni = ?";
-                  $stmt = $conn->prepare($update_query);
-                  $stmt->bind_param("sssss", $new_dni, $nombre, $direccion, $telefono, $old_dni);
-                  $stmt->execute();
+      function modificarCliente($conn, $old_dni, $new_dni, $nombre, $direccion, $telefono) {
+      if (isset($new_dni) && isset($nombre) && isset($direccion) && isset($telefono)) {
+          if (clienteExiste($conn, $old_dni)) {
+              $update_query = "UPDATE cliente SET dni = ?, nombre = ?, direccion = ?, telefono = ? WHERE dni = ?";
+              $stmt = $conn->prepare($update_query);
+              $stmt->bind_param("sssss", $new_dni, $nombre, $direccion, $telefono, $old_dni);
+              $stmt->execute();
 
-                  if ($stmt->affected_rows > 0) {
-                      return true;
-                  }
-                  $stmt->close();
+              if ($stmt->affected_rows > 0) {
+                  return true;
               }
-              return false;
+              $stmt->close();
           }
+          return false;
+        }
       }
 
       // Dar de baja un cliente
@@ -183,6 +182,7 @@
         ?>
       </table>
     </div>
+      <br>
       <a href="login.php"><button>Salir</button></a>
   </div>
 </body>
